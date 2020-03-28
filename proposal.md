@@ -48,6 +48,19 @@ so that this does not happen. In this regard, the dispatcher can periodically in
 
 Finally, these changes need to be incorporated into the web app for Teuthology, [Pulpito](https://github.com/ceph/pulpito).
 
+### Communication with mentors
 
+I have communicated to my mentors over a mail thread and IRC over the last month.
+The mentors had given me a list of tasks which I have duly completed.
+The tasks were:
 
+1. Cloning the Teuthology repository.
+
+2. Going through the [docs](https://docs.ceph.com/teuthology/docs/README.html) to understand the basics.
+
+3. Inspecting the code to find how scheduling and dequeing of jobs are done.
+
+4. Suggesting high level improvements to the code.
+
+5. Reading about Ceph integration testing using Teuthology and the structure of the suites.
 
