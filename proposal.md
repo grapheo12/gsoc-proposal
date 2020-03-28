@@ -64,3 +64,15 @@ The tasks were:
 
 5. Reading about Ceph integration testing using Teuthology and the structure of the suites.
 
+### Project Timeline
+
+[TODO]
+
+
+## Open Source Contributions/Projects
+
+As I have already discussed with my mentors, there are a few open source projects related to the task and the language (Python) with which I have to work on the project. Mentionworthy among them are:
+
+-  [https://github.com/grapheo12/atlan-task](https://github.com/grapheo12/atlan-task): This is a file upload/export server where uploads can be stopped in the midway by externally firing another request.
+
+- [https://github.com/iit-technology-ambit/Midgard](https://github.com/iit-technology-ambit/Midgard): This is Continuous Deployment bot built from scratch.
