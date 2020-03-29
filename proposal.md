@@ -22,6 +22,13 @@
 
 ### Project Description
 
+#### Abstract
+
+The project aims to replace the current multiple worker model for running tests
+to a single dispatcher mechanism.
+
+#### Details
+
 [Ceph](https://ceph.io) is a unified, distributed storage system designed for excellent performance, reliability and scalability.
 Ceph has an extensive testing framework called [Teuthology](https://github.com/ceph/teuthology).
 Teuthology attempts to solve the problem of testing in a highly distributed and scalable setup.
@@ -33,11 +40,16 @@ This schedules the job in the queue. Multiple worker processes are then run, whi
 These worker nodes compete against each other, to get a lock on the number of nodes required for the jobs they are running.
 This means that the jobs with lower priority often starve. This creates problems at scale.
 
+![Current mechanism: Note that multiple Workers are active at a time](img/current.png)
+
 The aim of my project is to replace this multiple worker mechanism to a single dispatcher.
 This dispatcher will walk through the jobs in the queue, fairly allocate them with the required amount of nodes and run them.
-Currently, workers need to be specified which nodes they must lock in order to carry out their execution. 
-Hence, if those nodes are not available, those jobs are left waiting.
+
+![Proposed mechanism](img/proposed.png)
+
+Presently, workers can be left waiting in case of unavailability of machines, thereby consuming resources.
 The proposed dispatcher will solve this issue by eliminating the competition.
+
 The jobs have already have a priority. We can readjust the priority by introducing a micro-parameter based on its node requirements.
 This will ensure that higher priority jobs run at first.
 At the same time, amongst jobs with same priority, it will ensure lighter jobs to be executed early, freeing resources as early as possible.
@@ -63,6 +75,10 @@ The tasks were:
 4. Suggesting high level improvements to the code.
 
 5. Reading about Ceph integration testing using Teuthology and the structure of the suites.
+
+### Contribution
+
+- [Open] https://github.com/ceph/teuthology/pull/1432
 
 ### Project Timeline
 
