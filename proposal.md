@@ -50,13 +50,24 @@ This dispatcher will walk through the jobs in the queue, fairly allocate them wi
 Presently, workers can be left waiting in case of unavailability of machines, thereby consuming resources.
 The proposed dispatcher will solve this issue by eliminating the competition.
 
-The jobs have already have a priority. We can readjust the priority by introducing a micro-parameter based on its node requirements.
+**Implementation of the Scheduler**
+
+A variety of job scheduling algorithms can be tested out with the dispatcher (for example, those discussed [here](https://www.os-book.com/OS9/slide-dir/PPT-dir/ch6.ppt)). One proposed idea is as follows:
+
+The jobs have already have a priorityi $p$.
+We can readjust the priority by introducing a micro-parameter $\delta p$ based on its node requirements.
+
+The absolute priority, $P = p + \delta p$
+
+This parameter $\delta p$ can be governed by demand of the requested node or the usual time required for the suite to finish.
+
 This will ensure that higher priority jobs run at first.
 At the same time, amongst jobs with same priority, it will ensure lighter jobs to be executed early, freeing resources as early as possible.
 
 The dispatcher will also stop and bury jobs that have not responded within a predefined threshold time.
+
 Currently, low priority jobs can be starved by a stream of high priority jobs. A stretch goal for the project is to implement an algorithm
-so that this does not happen. In this regard, the dispatcher can periodically increase the priorities.
+so that this does not happen. In this regard, the dispatcher can periodically increase the priorities $P$.
 
 Finally, these changes need to be incorporated into the web app for Teuthology, [Pulpito](https://github.com/ceph/pulpito).
 
