@@ -117,24 +117,31 @@ class Dispatcher(object):
             schedule_job(job)
 
         for group in machine_lock_list:
-            if group.lock_available:
-                job = connection.reserve(timeout=60)
-                if job and group.lock_machines():
-                    self.run_jonb(job)    #Spawns a subprocess to run the job
-            else:
+            while not group.lock_available:
                 wait()
+	
+            job = connection.reserve(timeout=60)
+            if job and group.lock_machines():
+                self.run_job(job)    #Spawns a subprocess to run the job
     ...
 
 ```
 
 **One worker vs Dispatcher model**
 
-Apparently, it may seem that the problem discussed above can be solved by having only one worker.
+Apparently, it may seem that the problem discussed above can be solved by having only one worker for each machine type
+(since tubes are maintained in Beanstalk according to machine type
+and a job has a specific type of machine required by it.)
+
 But this is not the case due to the following:
 
-1. A worker typically runs a single task, whereas the dispatcher must schedule all the tasks in the queue.
+1. *Sync vs Async*: The dispatcher runs jobs in the background. It can be easily seen that it has the potential to be used as a daemon. On the other hand workers process jobs one at a time. They must be run in foreground.
 
-2. Even if worker is made capable of running multiple tasks, it will perform it sequentially.
+2. *Time of locking*:
+As the pseudocode above suggests, the dispatcher decides beforehand the sequnce of locks to acquire and release.
+Before a job is run, the dispatcher locks the machines required for it.
+On the contrary, the worker lets the job lock machines as the first stage of the job execution.
+
 The dispatcher, by scheduling jobs such that adjancent jobs have the least number of conflicting resources,
 can achieve high level of parallelism.
 
@@ -150,8 +157,18 @@ Endpoints for handling the dispatcher (displaying current schedule, lock status 
 Each change I introduce to the existing system will be extensively tested.
 I propose to create a fixed set of fake jobs that can be used to benchmark the dispatcher scheduling algorithms
 against the current worker models.
-Benchmarking criteria will include time to complete the full list of jobs
-and average number of jobs running parallely.
+Benchmarking criteria will include:
+
+- Time to complete the full list of jobs
+- Average number of jobs running parallelly
+
+**Documentation**
+
+Since the dispatcher would be a new feature for Teuthology,
+I will document each new function or class I add and I will discuss the decisions I would have to take in order to implement them.
+
+If required, I will maintain regular log of my working in [Blog](https://grapheo12.github.io).
+
 
 ### Communication with mentors
 
@@ -166,6 +183,8 @@ The tasks were:
 3. Inspecting the code to find how scheduling and dequeing of jobs are done.
 
 4. Suggesting high level improvements to the code.
+    
+    (I suggest to use docstrings and/or [type hints](https://docs.python.org/3/library/typing.html) in all the functions so that new people viewing the code can understand it easily.)
 
 5. Reading about Ceph integration testing using Teuthology and the structure of the suites.
 
