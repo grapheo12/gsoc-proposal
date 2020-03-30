@@ -16,7 +16,18 @@
 
 - **Email Address**: smishra99.iitkgp@gmail.com
 
-- **Github**: [grapheo12](https://github.com/grapheo12)
+- **Github Handle**: [grapheo12](https://github.com/grapheo12)
+
+### Personal Background
+
+I am a $2^{nd}$ year undergraduate student from the Department of Computer Science and Engineering, [IIT Kharagpur](https://www.iitkgp.ac.in).
+My primary programming language is Python. I have been programming in it for the last 5 years.
+Besides, I am comfortable with C/C++, JavaScript and basic Java.
+
+I have interest in Distributed Systems. This is one of the reasons why I chose Ceph for GSoC.
+
+I have been actively contributing to Open Source Projects since 2018.
+As an Executive of [Kharagpur Open Source Society](https://kossiitkpg.org), I promote Open Source Culture in my campus by different workshops and events.
 
 ## Project Overview
 
@@ -54,7 +65,7 @@ The proposed dispatcher will solve this issue by eliminating the competition.
 
 A variety of job scheduling algorithms can be tested out with the dispatcher (for example, those discussed [here](https://www.os-book.com/OS9/slide-dir/PPT-dir/ch6.ppt)). One proposed idea is as follows:
 
-The jobs have already have a priorityi $p$.
+The jobs have already have a priority $p$.
 We can readjust the priority by introducing a micro-parameter $\delta p$ based on its node requirements.
 
 The absolute priority, $P = p + \delta p$
@@ -69,7 +80,42 @@ The dispatcher will also stop and bury jobs that have not responded within a pre
 Currently, low priority jobs can be starved by a stream of high priority jobs. A stretch goal for the project is to implement an algorithm
 so that this does not happen. In this regard, the dispatcher can periodically increase the priorities $P$.
 
-Finally, these changes need to be incorporated into the web app for Teuthology, [Pulpito](https://github.com/ceph/pulpito).
+**Locking Mechanism**
+
+Teuthology already has an elaborate mechanism to lock machines.
+It is run by the workers before starting of tasks.
+It would be best if the same locking mechanism is put into action by the dispatcher.
+
+The solution is that after a schedule of jobs is formed, the dispatcher will maintain a sequence of locks to perform for each task.
+Then it can use the existing locking mechanism to lock and unlock machines according to the sequence.
+A second task can be allowed to run parallely if the set of nodes required by them can be made disjoint.
+Else it needs to wait for clearance.
+
+**One worker vs Dispatcher model**
+
+Apparently, it may seem that the problem discussed above can be solved by having only one worker.
+But this is not the case due to the following:
+
+1. A worker typically runs a single task, whereas the dispatcher must schedule all the tasks in the queue.
+
+2. Even if worker is made capable of running multiple tasks, it will perform it sequentially.
+The dispatcher, by scheduling jobs such that adjancent jobs have the least number of conflicting resources,
+can achieve high level of parallelism.
+
+**Pulpito Integration**
+
+[Pulpito](https://github.com/ceph/pulpito) is the web app interface for Teuthology.
+Currently, it shows the status of the Beanstalk Queue.
+
+Endpoints for handling the dispatcher (displaying current schedule, lock status etc.) must be integrated with Pulpito.
+
+**Testing of features**
+
+Each change I introduce to the existing system will be extensively tested.
+I propose to create a fixed set of fake jobs that can be used to benchmark the dispatcher scheduling algorithms
+against the current worker models.
+Benchmarking criteria will include time to complete the full list of jobs
+and average number of jobs running parallely.
 
 ### Communication with mentors
 
@@ -89,7 +135,8 @@ The tasks were:
 
 ### Contribution
 
-- [Open] https://github.com/ceph/teuthology/pull/1432
+- [Open]
+[https://github.com/ceph/teuthology/pull/1432](https://github.com/ceph/teuthology/pull/1432)
 
 ### Project Timeline
 
