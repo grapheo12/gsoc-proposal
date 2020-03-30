@@ -45,8 +45,12 @@ Ceph has an extensive testing framework called [Teuthology](https://github.com/c
 Teuthology attempts to solve the problem of testing in a highly distributed and scalable setup.
 
 Currently, tests are run by Teuthology in the following way: A [Beanstalk](https://kr.github.io/beanstalkd/) priority queue is kept for the jobs.
-For testing, `teuthology-schedule` command is run with a designated job to run (see the [QA suites](https://github.com/ceph/ceph/tree/master/qa).
+For testing, `teuthology-schedule` command is run with a designated job to run (see the [QA suites](https://github.com/ceph/ceph/tree/master/qa)).
 This schedules the job in the queue. Multiple worker processes are then run, which consume these jobs from the queue and run the job processes.
+(Reference:
+[teuthology/beanstalk.py](https://github.com/ceph/teuthology/blob/master/teuthology/beanstalk.py),
+[teuthology/schedule.py](https://github.com/ceph/teuthology/blob/master/teuthology/schedule.py),
+[teuthology/worker.py](https://github.com/ceph/teuthology/blob/master/teuthology/worker.py))
 
 These worker nodes compete against each other, to get a lock on the number of nodes required for the jobs they are running.
 This means that the jobs with lower priority often starve. This creates problems at scale.
@@ -83,6 +87,7 @@ so that this does not happen. In this regard, the dispatcher can periodically in
 **Locking Mechanism**
 
 Teuthology already has an elaborate mechanism to lock machines.
+(Reference: [teuthology/lock_machines.py](https://github.com/ceph/teuthology/blob/master/teuthology/task/internal/lock_machines.py))
 It is run by the workers before starting of tasks.
 It would be best if the same locking mechanism is put into action by the dispatcher.
 
@@ -90,6 +95,37 @@ The solution is that after a schedule of jobs is formed, the dispatcher will mai
 Then it can use the existing locking mechanism to lock and unlock machines according to the sequence.
 A second task can be allowed to run parallely if the set of nodes required by them can be made disjoint.
 Else it needs to wait for clearance.
+
+At a very high level, this would be the high level flow of the `dispatcher.py` module I would be building.
+
+```python
+class Dispatcher(object):
+    ...
+    
+    #For each machine type run parallelly
+    def schedule_and_run(self, connection, machine):
+        jobs = JobProcessor()
+        walk_jobs(connection, machine, jobs)
+        self.reprioritize(jobs)    #To be implemented
+
+        machine_lock_list = self.schedule_machines(jobs)
+        #Each element of type MachineLockGroup that has
+        #the already mentioned lock_machine function as a method.
+
+        for job in jobs.jobs:
+            #Existing function that puts jobs back into queue
+            schedule_job(job)
+
+        for group in machine_lock_list:
+            if group.lock_available:
+                job = connection.reserve(timeout=60)
+                if job and group.lock_machines():
+                    self.run_jonb(job)    #Spawns a subprocess to run the job
+            else:
+                wait()
+    ...
+
+```
 
 **One worker vs Dispatcher model**
 
@@ -133,7 +169,7 @@ The tasks were:
 
 5. Reading about Ceph integration testing using Teuthology and the structure of the suites.
 
-### Contribution
+### Previous Contribution
 
 - [Open]
 [https://github.com/ceph/teuthology/pull/1432](https://github.com/ceph/teuthology/pull/1432)
@@ -202,6 +238,12 @@ The tasks were:
 
 ------------ [Final Evaluation] ------------------------
     
+**After GSoC**:
+    
+I will duly complete anything that may be left to be done in the coding phase.
+Then I will continue to participate in maintaining and improving the code.
+I would like to understand the full architecture of Ceph and would like to
+contribute in, apart from Teuthology, core parts of Ceph, eg, CephFS.
 
 ## Open Source Contributions/Projects
 
@@ -212,3 +254,4 @@ As I have already discussed with my mentors, there are a few open source project
 - [https://github.com/iit-technology-ambit/Midgard](https://github.com/iit-technology-ambit/Midgard): This is Continuous Deployment bot built from scratch.
 
 - Minor documentation improvement in Scipy: [https://github.com/scipy/scipy/pull/11499](https://github.com/scipy/scipy/pull/11499)
+
