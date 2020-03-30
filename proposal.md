@@ -140,8 +140,68 @@ The tasks were:
 
 ### Project Timeline
 
-[TODO]
+1. **Pre-Community Bonding Period**:
 
+    - Exploring the code-base more, to get acquainted with the all the minor details of the project.
+    - Submitting a few patches and solving a few issues.
+
+2. **Community Bonding Period**:
+
+    I prefer bonding with the community over code.
+    Since my institute's exams would be over by then, I will have a lot of time at hand.
+    Hence I'll divide this phase into 2 parts:
+
+    2a. [May Week 1-2]:
+	- Submitting more patches.
+	- Setting up development environment to run tests.
+	- Engaging in discussion over algorithms to be implemented with the community  over IRC and Email.
+
+    2b. [May Week 3-4]:
+	- Finding already available open-source implementations of the selected algorithms.
+	- Coding up samples of the scheduling of the dispatcher and benchmarking them.
+
+3. **June Week 1-2**:
+    
+    - Implementing the selected scheduling algorithms.
+    - Make dry-runs of the just scheduling of jobs to ensure everything is working as expected.
+    - Creating a fake set of jobs for testing purpose.
+
+4. **June Week 3-4**:
+
+    - Implementing output of order of machine locks by the dispatcher.
+    - Using the existing APIs to perform actual locks on the machines.
+    - Testing and becnhmark overall scheduling and locking flow.
+
+----------- [Phase 1 Evaluation] --------------
+
+5. **July Week 1-2**:
+    
+    This 2 weeks will be dedicated to integration of the works done in previous two weeks.
+    
+    - Implementing overall integration to the master code-base.
+    - Writing unit-tests for all the modules integrated.
+    - Running extensive tests with a set of fake jobs to check how the system performs in real-life.
+    - Document the changes made.
+
+6. **July Week 3-4**:
+
+    - Implement reprioritizing jobs. (This is a stretch goal of the project. So it is done after major parts of the main deliverables are completed.)
+    - Modifying the unit-tests and run test this feature on afore-mentioned fake set of jobs.
+
+------------- [Phase 2 Evaluation] ----------------------
+
+7. **August Week 1-2**:
+    
+    This 2 weeks will primarily focus on integrating the dispatcher functions with Pulpito Dashboard.
+    Besides writing of the documentation will be completed within this period.
+
+8. **August Week 3-4**:
+
+    This 2 weeks are kept as a buffer period to compensate for any unprecendented delay.
+    This can also be utilized for exploring further improvements in the projects if my mentors want the same.
+
+------------ [Final Evaluation] ------------------------
+    
 
 ## Open Source Contributions/Projects
 
