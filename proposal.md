@@ -150,3 +150,5 @@ As I have already discussed with my mentors, there are a few open source project
 -  [https://github.com/grapheo12/atlan-task](https://github.com/grapheo12/atlan-task): This is a file upload/export server where uploads can be stopped in the midway by externally firing another request.
 
 - [https://github.com/iit-technology-ambit/Midgard](https://github.com/iit-technology-ambit/Midgard): This is Continuous Deployment bot built from scratch.
+
+- Minor documentation improvement in Scipy: [https://github.com/scipy/scipy/pull/11499](https://github.com/scipy/scipy/pull/11499)
