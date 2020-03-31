@@ -14,7 +14,7 @@
 
 - **Time Zone**: Asia/Kolkata (UTC+5.5)
 
-- **Email Address**: smishra99.iitkgp@gmail.com
+- **Email Address**: smishra99.iitkgp@gmail.com (Personal), smishra@iitkgp.ac.in (Institute)
 
 - **Github Handle**: [grapheo12](https://github.com/grapheo12)
 
@@ -263,6 +263,14 @@ I will duly complete anything that may be left to be done in the coding phase.
 Then I will continue to participate in maintaining and improving the code.
 I would like to understand the full architecture of Ceph and would like to
 contribute in, apart from Teuthology, core parts of Ceph, eg, CephFS.
+
+**Work Hours**
+
+I will dedicate approximately 40-45 hours a week for this project.
+After the end-semester examination of my institute ends,
+I don't have any other engagement except for a
+tentative project in my department
+(will not take more than 20 hours a week).
 
 ## Open Source Contributions/Projects
 
